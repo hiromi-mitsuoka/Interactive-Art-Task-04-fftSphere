@@ -37,11 +37,11 @@ void draw() {
   rotateY(frameCount*0.008);
   rotateZ(frameCount*0.0085);
   for (int i=0; i<bands; i++) {
-    r[i] = map(fft.spectrum[i], 0, 1, 10, 800);
-    sW[i] = map(fft.spectrum[i], 0, 1, 0.25, 100);
-    //c[i] = map(fft.spectrum[i], 0, 1, 25, 0);
+    r[i] = map(fft.spectrum[i], 0, 1, 10, 1500);
+    r[i] *= 1+frameCount*0.001;
+    sW[i] = map(fft.spectrum[i], 0, 1, 0.35, 150);
+    sW[i] *= 1+frameCount*0.0001;
     strokeWeight(sW[i]*mouseX/200);
-    //stroke(255-c[i], 255-c[i], 255);
     stroke(pc, 220);
     point(r[i]*x[i], r[i]*y[i], r[i]*z[i]);
   }
