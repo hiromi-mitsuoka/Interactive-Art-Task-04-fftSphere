@@ -12,6 +12,7 @@ int bg = 0;
 int pc = 255;
 int soundMode = 0;
 
+
 void setup() {
   size(700, 700, P3D);
   sound = new SoundFile(this, "sound.mp3");
@@ -29,32 +30,41 @@ void setup() {
 void draw() {
   background(bg);
   fft.analyze();
-  pushMatrix();
   translate(width/2, height/2, -300);
   camera(0, 0, 200, 
     0, 0, 0, 
     0, 1.0, 0);
   rotateY(frameCount*0.008);
   rotateZ(frameCount*0.0085);
+  if (soundMode%3 == 1) {
+    bg = 255;
+    pc = 0;
+    blendMode(BLEND);
+  } else if (soundMode%3 == 2) {
+    bg = 0;
+    pc = 255;
+    blendMode(ADD);
+  } else {
+    bg = 0;
+    blendMode(ADD);
+  }
   for (int i=0; i<bands; i++) {
     r[i] = map(fft.spectrum[i], 0, 1, 10, 1500);
     r[i] *= 1+frameCount*0.001;
     sW[i] = map(fft.spectrum[i], 0, 1, 0.35, 150);
     sW[i] *= 1+frameCount*0.0001;
     strokeWeight(sW[i]*mouseX/200);
-    stroke(pc, 220);
+    stroke(pc);
+    if (soundMode%3 == 0) {
+      float pcR = random(255);
+      float pcG = random(255);
+      float pcB = random(255);
+      stroke(pcR, pcG, pcB);
+    }
     point(r[i]*x[i], r[i]*y[i], r[i]*z[i]);
   }
-  popMatrix();
 }
 
 void mousePressed() {
   soundMode++;
-  if (soundMode%2 == 1) {
-    bg = 255;
-    pc = 0;
-  } else {
-    bg = 0;
-    pc = 255;
-  }
 }
